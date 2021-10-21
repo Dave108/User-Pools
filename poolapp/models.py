@@ -6,6 +6,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.crypto import get_random_string
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
+from django.utils import timezone
+from datetime import timedelta
 
 
 # Create your models here.
@@ -48,11 +50,12 @@ def create_user_profile(sender, instance, created, **kwargs):
         print(sender.pool_over_time, "SENDER")
         print(instance, "instance")
         print(data)
-
+        ltm = datetime.datetime.now() + timedelta(days=1)
+        print(ltm.day)
         # celery code to call task and create cron tab time table
         unique_id = get_random_string(length=4)
         # (hour=hour, minute=minutes, day_of_week = '0,1,2,3,4,5,6', day_of_month = 1, month_of_year = 1)
-        schedule, created = CrontabSchedule.objects.get_or_create(hour=19, minute=56)
+        schedule, created = CrontabSchedule.objects.get_or_create(hour=ltm.hour, minute=ltm.minute)
         task = PeriodicTask.objects.create(crontab=schedule, name="task_scheduled_" + unique_id,
                                            task='poolapp.tasks.time_over')
         print("celery set-------")
