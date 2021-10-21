@@ -84,6 +84,9 @@ def calc_user_clicks(btn, table_id, user):
 
 
 def homepage(request):
+    a_float = 10.147593
+
+    print(round(a_float, 2))
     print(__version__, 'PLOTLY Version')
     if request.method == "POST":
         data = request.POST.get('button')
