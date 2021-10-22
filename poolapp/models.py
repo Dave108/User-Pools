@@ -8,6 +8,7 @@ from django.utils.crypto import get_random_string
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
 from django.utils import timezone
 from datetime import timedelta
+from cloudinary.models import CloudinaryField
 
 
 # Create your models here.
@@ -15,6 +16,7 @@ from datetime import timedelta
 class Pool(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField()
+    image = CloudinaryField('image')
     is_completed = models.BooleanField(default=False)
     pool1_name = models.CharField(null=False, max_length=100)
     pool1_count = models.FloatField(default=0)

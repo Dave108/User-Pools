@@ -10,6 +10,13 @@ import plotly.graph_objs as go
 import numpy as np
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 
+# for pdf generation
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+import os
+
 
 # Create your views here.
 
@@ -102,3 +109,32 @@ def homepage(request):
             "data": pool_data
         }
     return render(request, 'homepage.html', context)
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
+
+
+def pdf_conversion(template_src, context_dict={}):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+    print(html, 'HTML__________________')
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+
+def download_pool(request, pk):
+    print(pk, "ID HERE")
+    data = Pool.objects.get(id=pk)
+    print(data)
+    context = {
+        "data": data,
+    }
+    pdf = pdf_conversion('dwld-pools.html', context)
+    print(pdf)
+    # return render(request, 'dwld-pools.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')

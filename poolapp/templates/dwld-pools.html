@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Download Pools</title>
+    <!--    chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               /* text-align: right;*/
+               padding: 10px 20px 0px 20px;
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                padding: 10px 20px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+    </style>
+  </head>
+  <body>
+
+
+  <div class="container">
+    <br>
+    <img class="img-fluid img-thumbnail rounded mx-auto d-block" style="width:400px; display: block;
+  margin-left: auto; margin-right: auto;" src="https://res.cloudinary.com/dxfnxrqwy/image/upload/w_1000,ar_16:9,c_fill,g_auto,e_sharpen/v1634891666/opinion%20pool%20logo/User-OP-Pools-logos_xu8mzl.jpg">
+    <br>
+
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <h4 class="title"><span>{{data.name}}</span></h4>
+          <img src="{{data.image.url}}" class="img-fluid img-thumbnail rounded mx-auto d-block" style="width:200px;">
+          <P class="details"><em>{{data.description}}</em></P>
+          <small>{{data.pool1_name}}</small>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: {{data.pool1_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{data.pool1_percent|floatformat:2}}%</div>
+          </div><br>
+          <small>{{data.pool2_name}}</small>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: {{data.pool2_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{data.pool2_percent|floatformat:2}}%</div>
+          </div><br>
+          {% if data.pool3_name != Null and data.pool4_name != Null %}
+          <small>{{data.pool3_name}}</small>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: {{data.pool3_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{data.pool3_percent|floatformat:2}}%</div>
+          </div><br>
+          <small>{{data.pool4_name}}</small>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: {{data.pool4_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{data.pool4_percent|floatformat:2}}%</div>
+          </div><br>
+          {% elif data.pool3_name != Null %}
+          <small>{{data.pool3_name}}</small>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: {{data.pool3_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{data.pool3_percent|floatformat:2}}%</div>
+          </div><br>
+          {% endif %}
+
+        </div>
+        <div class="col-sm">
+          <div class="container">
+            <p>chart</p>
+          <canvas id="myChart" width="200" ></canvas>
+          </div>
+          <script>
+          var ctx = document.getElementById('myChart').getContext('2d');
+          var myChart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+
+
+                  {% if data.pool3_name != Null and data.pool4_name != Null %}
+                  labels: ['{{data.pool1_name}}', '{{data.pool2_name}}', '{{data.pool3_name}}', '{{data.pool4_name}}'],
+                  {% elif data.pool3_name != Null %}
+                  labels: ['{{data.pool1_name}}', '{{data.pool2_name}}', '{{data.pool3_name}}'],
+                  {% else %}
+                  labels: ['{{data.pool1_name}}', '{{data.pool2_name}}'],
+                  {% endif %}
+
+                  datasets: [{
+                      label: '# of Votes',
+
+                      {% if data.pool3_name != Null and data.pool4_name != Null %}
+                      data: [{{data.pool1_count}}, {{data.pool2_count}}, {{data.pool3_count}}, {{data.pool4_count}}],
+                      {% elif data.pool3_name != Null %}
+                      data: [{{data.pool1_count}}, {{data.pool2_count}}, {{data.pool3_count}}],
+                      {% else %}
+                      data: [{{data.pool1_count}}, {{data.pool2_count}}],
+                      {% endif %}
+
+                      backgroundColor: [
+                          'rgba(255, 99, 132, 0.2)',
+                          'rgba(54, 162, 235, 0.2)',
+                          'rgba(255, 206, 86, 0.2)',
+                          'rgba(75, 192, 192, 0.2)',
+                          'rgba(153, 102, 255, 0.2)',
+                          'rgba(255, 159, 64, 0.2)'
+                      ],
+                      borderColor: [
+                          'rgba(255, 99, 132, 1)',
+                          'rgba(54, 162, 235, 1)',
+                          'rgba(255, 206, 86, 1)',
+                          'rgba(75, 192, 192, 1)',
+                          'rgba(153, 102, 255, 1)',
+                          'rgba(255, 159, 64, 1)'
+                      ],
+                      borderWidth: 1
+                  }]
+              },
+              options: {
+                  scales: {
+                      y: {
+                          beginAtZero: true
+                      }
+                  },
+                  plugins: {
+                      title: {
+                          display: true,
+                          text: '{{data.description}}'
+                      }
+                  }
+              }
+          });
+          </script>
+        </div>
+      </div>
+    </div>
+
+  </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>

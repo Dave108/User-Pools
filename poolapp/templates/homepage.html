@@ -17,59 +17,59 @@
   <div class="container">
 
     <h1>Home Page:</h1>
+    <a class="btn btn-sm btn-warning" href="{% url 'logout' %}">Logout</a>
     <br>
     {% for pools in data %}
+    {% if pools.is_completed != True %}
     <div class="row">
       <div class="col">
-        {% if pools.is_completed != True %}
-          <p>{{pools.name}}</p>
+
+        <h4>{{pools.name}}</h4>
+        <img class="img-fluid img-thumbnail rounded mx-auto d-block" style="width:200px;" src="{{pools.image.url}}">
           <form method="POST" action="">
             {% csrf_token %}
-            <p>{{pools.description}}</p>
+            <h5>{{pools.description}}</h5>
             <br>
 
             <input type="radio" id="btn-1" name="button" value="btn-1">
             <label for="btn-1">{{pools.pool1_name}}</label>
             <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: {{pools.pool1_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-            <p>{{pools.pool1_percent|floatformat:2}}</p><br>
+              <div class="progress-bar" role="progressbar" style="width: {{pools.pool1_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{pools.pool1_percent|floatformat:2}}%</div>
+            </div><br>
 
             <input type="radio" id="btn-2" name="button" value="btn-2">
             <label for="btn-2">{{pools.pool2_name}}</label>
             <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: {{pools.pool2_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+              <div class="progress-bar" role="progressbar" style="width: {{pools.pool2_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{pools.pool2_percent|floatformat:2}}%</div>
             </div>
-            <p>{{pools.pool2_percent|floatformat:2}}</p><br>
+            <br>
             {% if pools.pool3_name != Null and pools.pool4_name != Null %}
 
             <input type="radio" id="btn-3" name="button" value="btn-3">
             <label for="btn-3">{{pools.pool3_name}}</label>
             <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: {{pools.pool3_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-            <p>{{pools.pool3_percent|floatformat:2}}</p><br>
+              <div class="progress-bar" role="progressbar" style="width: {{pools.pool3_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{pools.pool3_percent|floatformat:2}}%</div>
+            </div><br>
 
             <input type="radio" id="btn-4" name="button" value="btn-4">
             <label for="btn-4">{{pools.pool4_name}}</label>
             <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: {{pools.pool4_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-            <p>{{pools.pool4_percent|floatformat:2}}</p><br>
+              <div class="progress-bar" role="progressbar" style="width: {{pools.pool4_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{pools.pool4_percent|floatformat:2}}%</div>
+            </div><br>
             {% elif pools.pool3_name != Null %}
 
             <input type="radio" id="btn-3.1" name="button" value="btn-3">
             <label for="btn-3.1">{{pools.pool3_name}}</label>
             <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: {{pools.pool3_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-            <p>{{pools.pool3_percent|floatformat:2}}</p><br>
+              <div class="progress-bar" role="progressbar" style="width: {{pools.pool3_percent|floatformat:2}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{pools.pool3_percent|floatformat:2}}%</div>
+            </div><br>
             {% endif %}
             <input name="pool_table" type="text" value="{{pools.id}}" hidden>
             <input type="submit" value="SUBMIT" class="btn btn-sm btn-primary">
 
           </form>
-        {% endif %}
+        <a href="{% url 'download_pool' pk=pools.id %}">Download results of the pool(PDF)</a>
+
         <hr>
       </div>
       <div class="col">
@@ -139,7 +139,9 @@
         </script>
       </div>
     </div>
+    {% endif %}
     {% endfor %}
+    <br>
   </div>
 
 
